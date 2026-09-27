@@ -194,11 +194,11 @@ const Upload = {
       }
 
       const options = {
-        maxSizeMB: 0.08,
-        maxWidthOrHeight: 1080,
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1280,
         useWebWorker: false,
         fileType: "image/webp",
-        initialQuality: 0.5
+        initialQuality: 0.65
       };
 
       const compressedBlob = await imageCompression(file, options);
