@@ -256,15 +256,7 @@ const Upload = {
       bar.style.width = "40%";
       const momentId = "m_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
       alert("STEP 3: Mulai upload media");
-      let uploadResult;
-      try {
-        alert("STEP 3a: Mulai panggil DB.uploadMedia");
-        uploadResult = await DB.uploadMedia(compressedFile, this.user.id, momentId);
-        alert("STEP 3b: Hasil upload: " + JSON.stringify(uploadResult));
-      } catch (uploadErr) {
-        alert("❌ ERROR DI UPLOAD MEDIA:\n" + uploadErr.message + "\n\nStack:\n" + (uploadErr.stack || "no stack"));
-        throw uploadErr;
-      }
+      const uploadResult = await DB.uploadMedia(compressedFile, this.user.id, momentId);
       alert("STEP 4: Upload selesai: " + uploadResult.url.substring(0, 50));
 
       // Step 2: Insert metadata ke Supabase
