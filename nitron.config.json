@@ -1,0 +1,11 @@
+{
+  "name": "Lingkar",
+  "packageId": "app.lingkar.mobile",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "permissions": ["INTERNET", "CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+  "icon": "./www/assets/icon.png",
+  "splash": "./www/assets/splash.png",
+  "webDir": "www"
+}

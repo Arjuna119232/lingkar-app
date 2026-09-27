@@ -1,0 +1,29 @@
+/* ===== animations.css ===== */
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+@keyframes slideUp{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+@keyframes popIn{from{opacity:0; transform:scale(.9);} to{opacity:1; transform:scale(1);}}
+@keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.5;}}
+
+.fade-in{animation:fadeIn .3s ease both;}
+.slide-up{animation:slideUp .35s ease both;}
+.pop-in{animation:popIn .25s ease both;}
+.stagger > *{animation:slideUp .35s ease both;}
+.stagger > *:nth-child(1){animation-delay:.02s;}
+.stagger > *:nth-child(2){animation-delay:.06s;}
+.stagger > *:nth-child(3){animation-delay:.10s;}
+.stagger > *:nth-child(4){animation-delay:.14s;}
+.stagger > *:nth-child(5){animation-delay:.18s;}
+
+.skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface) 37%,var(--surface-2) 63%);
+  background-size:400% 100%; animation:shimmer 1.4s ease infinite; border-radius:var(--radius-sm);}
+@keyframes shimmer{0%{background-position:100% 50%;} 100%{background-position:0 50%;}}
+
+.page-transition{animation:fadeIn .2s ease both;}
+
+/* onboarding slider */
+.slides-track{display:flex; transition:transform .35s ease;}
+.slide{min-width:100%; flex-shrink:0;}
+.dots{display:flex; justify-content:center; gap:6px;}
+.dots .dot{width:7px; height:7px; border-radius:50%; background:var(--border); transition:.2s;}
+.dots .dot.active{width:20px; border-radius:4px; background:var(--primary);}

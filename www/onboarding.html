@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lingkar - Selamat Datang</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #0a0a0a;
+  }
+
+  /* ===== WRAPPER ===== */
+  .onboarding-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    max-width: 100%;
+    padding: 0 clamp(12px, 4vw, 24px);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== HEADER ===== */
+  .onboarding-header {
+    flex-shrink: 0;
+    text-align: right;
+    padding: clamp(8px, 1.5vh, 14px) 0;
+  }
+
+  .btn-skip {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: clamp(12px, 3.5vw, 14px);
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* ===== SLIDES AREA ===== */
+  .onboarding-slides {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .slides-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .slide {
+    min-width: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 4px;
+  }
+
+  /* Gambar auto-scale */
+  .slide img {
+    width: clamp(100px, 30vw, 150px);
+    height: clamp(100px, 30vw, 150px);
+    object-fit: contain;
+    margin-bottom: clamp(16px, 3vh, 24px);
+    flex-shrink: 0;
+  }
+
+  /* Judul */
+  .slide h2 {
+    font-size: clamp(17px, 5vw, 22px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: clamp(8px, 1.5vh, 12px);
+    max-width: 100%;
+    word-wrap: break-word;
+    padding: 0 4px;
+  }
+
+  /* Deskripsi */
+  .slide p.slide-desc {
+    font-size: clamp(12px, 3.6vw, 14px);
+    color: #888;
+    line-height: 1.5;
+    max-width: min(320px, 90vw);
+    word-wrap: break-word;
+    padding: 0 4px;
+  }
+
+  /* ===== INFO CARD ===== */
+  .info-card {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.1), rgba(255, 149, 0, 0.1));
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    border-radius: clamp(10px, 3vw, 14px);
+    padding: clamp(10px, 2.5vw, 16px);
+    margin-top: clamp(14px, 2.5vh, 20px);
+    text-align: left;
+    width: 100%;
+    max-width: min(340px, 92vw);
+  }
+
+  .info-card h3 {
+    color: #ff3b30;
+    font-size: clamp(12px, 3.5vw, 14px);
+    margin-bottom: clamp(6px, 1vh, 10px);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+  }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .info-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(6px, 2vw, 10px);
+    font-size: clamp(11px, 3.3vw, 13px);
+    color: #ccc;
+    line-height: 1.5;
+    margin-bottom: clamp(5px, 1vh, 8px);
+  }
+
+  .info-card li:last-child { margin-bottom: 0; }
+
+  .info-card li .emoji {
+    font-size: clamp(12px, 3.5vw, 14px);
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+
+  .info-card li .text {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+  }
+
+  .info-card li strong { color: #fff; }
+
+  /* ===== FOOTER ===== */
+  .onboarding-footer {
+    flex-shrink: 0;
+    padding: clamp(12px, 2vh, 18px) 0 clamp(16px, 2.5vh, 22px);
+  }
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: clamp(12px, 1.8vh, 16px);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333;
+    transition: all 0.25s ease;
+  }
+
+  .dot.active {
+    width: clamp(16px, 5vw, 22px);
+    border-radius: 3px;
+    background: #8b5cf6;
+  }
+
+  .btn-full {
+    width: 100%;
+    padding: clamp(12px, 2vh, 15px);
+    border: none;
+    border-radius: clamp(10px, 3vw, 14px);
+    background: #8b5cf6;
+    color: #fff;
+    font-size: clamp(13px, 4vw, 15px);
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-full:active {
+    transform: scale(0.97);
+  }
+
+  /* ===== HP KECIL (<= 360px) ===== */
+  @media (max-width: 360px) {
+    .slide img {
+      width: clamp(80px, 26vw, 110px);
+      height: clamp(80px, 26vw, 110px);
+    }
+  }
+
+  /* ===== LAYAR PENDEK (tinggi <= 700px) ===== */
+  @media (max-height: 700px) {
+    .slide img {
+      width: clamp(80px, 24vw, 110px);
+      height: clamp(80px, 24vw, 110px);
+      margin-bottom: 12px;
+    }
+    .slide h2 {
+      font-size: clamp(15px, 4.5vw, 18px);
+    }
+    .info-card {
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .info-card li {
+      margin-bottom: 4px;
+    }
+  }
+</style>
+</head>
+<body onload="localStorage.setItem('lingkar_onboarded','1')">
+  <div class="onboarding-wrap">
+
+    <div class="onboarding-header">
+      <button id="btn-skip" class="btn-skip">Lewati</button>
+    </div>
+
+    <div class="onboarding-slides">
+      <div class="slides-track" id="slides-track">
+
+        <div class="slide">
+          <img src="assets/onboarding-1.svg" alt="">
+          <h2>Selamat datang di Lingkar</h2>
+          <p class="slide-desc">Ruang privat untuk berbagi momen asli, tanpa tekanan tampil sempurna.</p>
+        </div>
+
+        <div class="slide">
+          <img src="assets/onboarding-2.svg" alt="">
+          <h2>Bagikan momen ke lingkaran terdekat</h2>
+          <p class="slide-desc">Inner Circle, Close Circle, atau Community — kamu yang atur siapa yang lihat.</p>
+        </div>
+
+        <div class="slide">
+          <img src="assets/onboarding-3.svg" alt="">
+          <h2>Momen hanya tersimpan 7 hari</h2>
+          <p class="slide-desc">Simpan momen favoritmu sebelum hilang otomatis.</p>
+
+          <div class="info-card">
+            <h3>⚠️ Penting untuk diketahui</h3>
+            <ul>
+              <li>
+                <span class="emoji">💾</span>
+                <span class="text"><strong>Momen disimpan di HP kamu</strong> — hemat kuota, privat, cepat.</span>
+              </li>
+              <li>
+                <span class="emoji">⏱️</span>
+                <span class="text"><strong>Otomatis terhapus setelah 7 hari</strong> untuk hemat penyimpanan.</span>
+              </li>
+              <li>
+                <span class="emoji">📥</span>
+                <span class="text"><strong>Simpan ke galeri</strong> momen penting sebelum hilang.</span>
+              </li>
+              <li>
+                <span class="emoji">📱</span>
+                <span class="text"><strong>Jangan hapus aplikasi</strong> — momen di HP akan hilang.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide">
+          <img src="assets/logo.svg" alt="">
+          <h2>Mulai sekarang</h2>
+          <p class="slide-desc">Tanpa algoritma, tanpa like publik. Cuma kamu dan orang-orang terdekat.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="onboarding-footer">
+      <div class="dots" id="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <button id="btn-next" class="btn-full">Lanjut</button>
+    </div>
+
+  </div>
+
+  <script src="js/onboarding.js"></script>
+</body>
+</html>

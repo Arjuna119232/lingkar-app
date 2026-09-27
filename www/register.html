@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daftar - Lingkar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="container page no-nav no-header fade-in" style="padding-top:40px">
+    <div style="text-align:center;margin-bottom:24px">
+      <img src="assets/logo.svg" style="width:56px;height:56px;margin:0 auto">
+      <h1 style="font-size:20px;font-weight:800;margin-top:12px">Buat Akun Lingkar</h1>
+    </div>
+    <form id="register-form">
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap"><input type="text" name="username" required placeholder="username_kamu"></div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <div class="input-wrap"><input type="email" name="email" required placeholder="nama@email.com"></div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" name="password" required placeholder="Minimal 6 karakter">
+          <i class="fa-solid fa-eye toggle-eye" id="toggle-pw"></i>
+        </div>
+        <div class="progress-bar" style="height:4px"><div class="fill" id="pw-strength"></div></div>
+        <div class="text-dim" id="pw-strength-label" style="font-size:11px;margin-top:4px"></div>
+      </div>
+      <div class="field">
+        <label>Konfirmasi Password</label>
+        <div class="input-wrap"><input type="password" name="confirm" required placeholder="Ulangi password"></div>
+      </div>
+      <label class="checkbox-row mb-16">
+        <input type="checkbox" name="agree" required>
+        <span>Saya setuju dengan <a href="terms.html" class="text-primary">Syarat & Ketentuan</a></span>
+      </label>
+      <button type="submit" class="btn" id="btn-register">Daftar</button>
+    </form>
+    <p class="text-dim mt-24" style="text-align:center;font-size:13px">
+      Sudah punya akun? <a href="login.html" class="text-primary">Masuk</a>
+    </p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/local-storage.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script>App.applyTheme(); Auth.initRegister();</script>
+</body>
+</html>
