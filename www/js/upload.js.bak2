@@ -278,7 +278,7 @@ const Upload = {
 
     } catch (err) {
       console.error("Upload error:", err);
-      alert("DETAIL ERROR:\n" + err.message + "\n\nStack:\n" + (err.stack || "no stack"));
+      Utils.toast("Gagal posting: " + err.message);
       Utils.setLoading(btn, false, "Posting");
       progressEl.classList.add("hidden");
       bar.style.width = "0%";
