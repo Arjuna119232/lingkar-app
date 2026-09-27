@@ -18,18 +18,27 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Info Android SDK
+        run: |
+          echo "ANDROID_HOME: $ANDROID_HOME"
+          echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
+          ls $ANDROID_HOME 2>/dev/null || ls /usr/local/lib/android/sdk
 
       - name: Copy www ke assets
         run: |
           cp -r www/* android/app/src/main/assets/
+          echo "✅ Files copied:"
+          ls android/app/src/main/assets/ | head -5
+
+      - name: Setup Gradle Wrapper
+        run: |
+          cd android
+          gradle wrapper --gradle-version 8.4 || (echo "Gradle tidak ada, pakai gradle dari sistem" && which gradle)
+          chmod +x gradlew
 
       - name: Build APK
         run: |
           cd android
-          gradle wrapper --gradle-version 8.4
-          chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
 
       - name: Cari APK
@@ -37,6 +46,7 @@ jobs:
         run: |
           APK=$(find android -name "*.apk" | head -n 1)
           echo "apk_path=$APK" >> $GITHUB_OUTPUT
+          echo "APK: $APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
