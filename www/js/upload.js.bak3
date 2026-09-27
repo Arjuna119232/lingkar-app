@@ -248,20 +248,15 @@ const Upload = {
     try {
       // Step 0: Kompres
       bar.style.width = "15%";
-      alert("STEP 1: Mulai kompres");
       const compressedFile = await this.compressFile(this.file, this.mediaType);
-      alert("STEP 2: Kompres selesai, ukuran: " + compressedFile.size);
 
       // Step 1: Simpan ke HP (atau fallback ke cloud)
       bar.style.width = "40%";
       const momentId = "m_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
-      alert("STEP 3: Mulai upload media");
       const uploadResult = await DB.uploadMedia(compressedFile, this.user.id, momentId);
-      alert("STEP 4: Upload selesai: " + uploadResult.url.substring(0, 50));
 
       // Step 2: Insert metadata ke Supabase
       bar.style.width = "70%";
-      alert("STEP 5: Mulai create moment");
       const moment = await DB.createMoment({
         user_id: this.user.id,
         media_url: uploadResult.url,
@@ -272,7 +267,6 @@ const Upload = {
       });
 
       // Step 3: Insert visibility
-      alert("STEP 6: Mulai insert visibility");
       await sb.from("moment_visibility").insert(
         circleIds.map(id => ({ moment_id: moment.id, circle_id: id }))
       );
