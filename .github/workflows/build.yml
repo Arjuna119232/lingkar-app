@@ -21,114 +21,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Siapkan struktur Android
+      - name: Copy www ke assets
         run: |
-          mkdir -p android/app/src/main/assets
-          mkdir -p android/app/src/main/java/com/lingkar/app
-          mkdir -p android/app/src/main/res/values
-          mkdir -p android/app/src/main/res/mipmap-hdpi
           cp -r www/* android/app/src/main/assets/
-          echo "www copied:"
-          ls android/app/src/main/assets/ | head -10
-
-      - name: Buat MainActivity.java
-        run: |
-          cat > android/app/src/main/java/com/lingkar/app/MainActivity.java << 'JAVA_END'
-          package com.lingkar.app;
-          import android.os.Bundle;
-          import android.webkit.WebView;
-          import android.webkit.WebViewClient;
-          import android.webkit.WebSettings;
-          import android.app.Activity;
-          public class MainActivity extends Activity {
-              private WebView webView;
-              @Override
-              protected void onCreate(Bundle savedInstanceState) {
-                  super.onCreate(savedInstanceState);
-                  webView = new WebView(this);
-                  WebSettings settings = webView.getSettings();
-                  settings.setJavaScriptEnabled(true);
-                  settings.setDomStorageEnabled(true);
-                  settings.setAllowFileAccess(true);
-                  settings.setAllowContentAccess(true);
-                  settings.setMediaPlaybackRequiresUserGesture(false);
-                  webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("file:///android_asset/index.html");
-                  setContentView(webView);
-              }
-              @Override
-              public void onBackPressed() {
-                  if (webView.canGoBack()) webView.goBack();
-                  else super.onBackPressed();
-              }
-          }
-          JAVA_END
-
-      - name: Buat AndroidManifest.xml
-        run: |
-          cat > android/app/src/main/AndroidManifest.xml << 'XML_END'
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="com.lingkar.app">
-              <uses-permission android:name="android.permission.INTERNET" />
-              <uses-permission android:name="android.permission.CAMERA" />
-              <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-              <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-              <uses-permission android:name="android.permission.VIBRATE" />
-              <application
-                  android:label="Lingkar"
-                  android:usesCleartextTraffic="true"
-                  android:hardwareAccelerated="true">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN" />
-                          <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          XML_END
-
-      - name: Buat build.gradle
-        run: |
-          cat > android/build.gradle << 'GRADLE_END'
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies { classpath 'com.android.tools.build:gradle:8.1.4' }
-          }
-          allprojects { repositories { google(); mavenCentral() } }
-          GRADLE_END
-
-          cat > android/settings.gradle << 'GRADLE_END'
-          rootProject.name = "Lingkar"
-          include ':app'
-          GRADLE_END
-
-          cat > android/app/build.gradle << 'GRADLE_END'
-          apply plugin: 'com.android.application'
-          android {
-              namespace 'com.lingkar.app'
-              compileSdk 34
-              defaultConfig {
-                  applicationId "com.lingkar.app"
-                  minSdk 24
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0.0"
-              }
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                  }
-              }
-              compileOptions {
-                  sourceCompatibility JavaVersion.VERSION_17
-                  targetCompatibility JavaVersion.VERSION_17
-              }
-          }
-          GRADLE_END
 
       - name: Build APK
         run: |
@@ -142,7 +37,6 @@ jobs:
         run: |
           APK=$(find android -name "*.apk" | head -n 1)
           echo "apk_path=$APK" >> $GITHUB_OUTPUT
-          echo "APK: $APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
