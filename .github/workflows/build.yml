@@ -26,12 +26,15 @@ jobs:
         run: |
           wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
           unzip -q gradle-8.4-bin.zip
-          echo "✅ Gradle 8.4 siap"
 
-      - name: Build APK dengan Gradle 8.4
+      - name: Buat debug keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Build APK (debug + signed)
         run: |
           cd android
-          ../gradle-8.4/bin/gradle assembleRelease --no-daemon
+          ../gradle-8.4/bin/gradle assembleDebug --no-daemon
 
       - name: Cari APK
         id: find_apk
