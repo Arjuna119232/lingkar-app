@@ -151,8 +151,15 @@ const DB = {
    * @returns {Promise<{url: string, isLocal: boolean, localId?: string, path?: string}>}
    */
   async uploadMedia(file, userId, momentId = null) {
-    // DEBUG: Skip LocalStorage, langsung ke Supabase
-    alert("DEBUG: Skip IndexedDB, langsung upload ke Supabase");
+    // Coba simpan lokal dulu
+    try {
+      const localId = momentId || `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const localUrl = await LocalStorage.saveFile(localId, file);
+      console.log("✅ File disimpan di HP:", localId);
+      return { url: localUrl, isLocal: true, localId };
+    } catch (e) {
+      console.warn("⚠️ Gagal simpan lokal, fallback ke Supabase:", e);
+    }
 
     // Fallback: upload ke Supabase
     const ext = file.name.split(".").pop();

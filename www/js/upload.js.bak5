@@ -173,46 +173,51 @@ const Upload = {
 
   async compressFile(file, mediaType) {
     try {
-      // Video: skip kompresi (langsung upload)
-      if (mediaType === "video") {
-        Utils.toast("Video langsung di-upload tanpa kompresi");
-        return file;
+      Utils.toast(`⏳ Mengkompres ${mediaType === "video" ? "video" : "foto"}...`);
+
+      const { default: Optimizer } = await import("https://cdn.jsdelivr.net/npm/image-video-compressor@latest/dist/browser.mjs");
+      const optimizer = new Optimizer();
+
+      const options = mediaType === "video"
+        ? {
+            mediaType: "video",
+            videoSettings: {
+              crf: COMPRESS_CONFIG.video.crf,
+              preset: COMPRESS_CONFIG.video.preset,
+              audioBitrate: COMPRESS_CONFIG.video.audioBitrate,
+              maxWidth: COMPRESS_CONFIG.video.maxWidth,
+              maxHeight: COMPRESS_CONFIG.video.maxHeight
+            }
+          }
+        : {
+            mediaType: "image",
+            imageSettings: {
+              quality: COMPRESS_CONFIG.image.quality,
+              format: COMPRESS_CONFIG.image.format
+            }
+          };
+
+      const result = await optimizer.optimize(file, options);
+
+      if (!result.success) {
+        throw new Error(result.error || "Kompresi gagal");
       }
 
-      // Foto: pakai library lokal browser-image-compression
-      Utils.toast("Mengkompres foto...");
+      const saving = Math.round((1 - result.optimizedSize / result.originalSize) * 100);
+      console.log(`📦 ${result.originalSize} → ${result.optimizedSize} bytes (hemat ${saving}%)`);
 
-      // Load library dari file lokal
-      if (typeof imageCompression === "undefined") {
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "js/lib/browser-image-compression.js";
-          script.onload = resolve;
-          script.onerror = reject;
-          document.head.appendChild(script);
-        });
-      }
-
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 1280,
-        useWebWorker: false,
-        fileType: "image/webp",
-        initialQuality: 0.65
-      };
-
-      const compressedBlob = await imageCompression(file, options);
-      const newFile = new File([compressedBlob], "compressed.webp", {
-        type: "image/webp"
+      const blob = result.data;
+      const ext = mediaType === "video" ? "mp4" : "webp";
+      const newFile = new File([blob], `compressed.${ext}`, {
+        type: mediaType === "video" ? "video/mp4" : "image/webp"
       });
 
-      const saving = Math.round((1 - newFile.size / file.size) * 100);
-      Utils.toast("Hemat " + saving + "%");
+      Utils.toast(`✅ Hemat ${saving}%`);
       return newFile;
 
     } catch (e) {
       console.warn("Kompresi gagal, pakai file asli:", e);
-      Utils.toast("Kompresi gagal, pakai file asli");
+      Utils.toast("⚠️ Kompresi gagal, pakai file asli");
       return file;
     }
   },
