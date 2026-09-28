@@ -56,3 +56,60 @@ button, input, textarea, select{font-family:inherit;}
 .mt-8{margin-top:8px;} .mt-16{margin-top:16px;} .mt-24{margin-top:24px;}
 .mb-8{margin-bottom:8px;} .mb-16{margin-bottom:16px;} .mb-24{margin-bottom:24px;}
 ::-webkit-scrollbar{width:0; height:0;}
+
+/* ============================================
+   FEED CARD FIX — batasi tinggi gambar
+   ============================================ */
+.moment-media {
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.moment-media img,
+.moment-media video {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card momen lebih compact */
+.moment-card {
+  overflow: hidden;
+}
+
+.moment-card .moment-caption {
+  padding: 12px 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.moment-card .moment-actions {
+  padding: 12px 16px 14px;
+}
+
+/* Responsive — di layar kecil */
+@media (max-width: 480px) {
+  .moment-media {
+    max-height: 320px;
+  }
+  .moment-media img,
+  .moment-media video {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 360px) {
+  .moment-media {
+    max-height: 260px;
+  }
+  .moment-media img,
+  .moment-media video {
+    max-height: 260px;
+  }
+}
