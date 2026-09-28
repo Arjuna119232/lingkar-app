@@ -1,6 +1,9 @@
 package com.lingkar.app;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,16 +19,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
@@ -82,15 +82,18 @@ public class MainActivity extends Activity {
                 }
                 MainActivity.this.filePathCallback = filePathCallback;
 
+                // Cek apakah request butuh kamera (capture="environment")
                 boolean needsCamera = false;
                 String[] acceptTypes = fileChooserParams.getAcceptTypes();
                 for (String type : acceptTypes) {
                     if (type.contains("image") || type.contains("video")) {
+                        // Cek apakah ada indikasi capture
                         needsCamera = true;
                         break;
                     }
                 }
 
+                // Kalau bukan request kamera, buka file picker biasa
                 if (!needsCamera) {
                     Intent intent = fileChooserParams.createIntent();
                     try {
@@ -102,6 +105,7 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
+                // Cek izin kamera
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
@@ -112,6 +116,7 @@ public class MainActivity extends Activity {
                     return true;
                 }
 
+                // Buka kamera
                 openCamera();
                 return true;
             }
@@ -120,11 +125,12 @@ public class MainActivity extends Activity {
         webView.loadUrl("file:///android_asset/index.html");
         setContentView(webView);
 
+        // Request semua permission saat pertama buka
         requestAllPermissions();
     }
 
     private void requestAllPermissions() {
-        List<String> permissions = new ArrayList<>();
+        java.util.List<String> permissions = new java.util.ArrayList<>();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -156,8 +162,12 @@ public class MainActivity extends Activity {
 
     private void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        
+        // Kalau bisa handle video, biar user pilih
+        // cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Buat file temporary untuk simpan hasil kamera
             File photoFile = createImageFile();
             if (photoFile != null) {
                 cameraImageUri = FileProvider.getUriForFile(
