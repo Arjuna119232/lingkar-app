@@ -2,29 +2,9 @@
 const Settings = {
   async init() {
     App.init({ nav: false, requireAuth: true });
-    const currentTheme = localStorage.getItem("lingkar_theme") || "dark";
-    document.getElementById("theme-switch").checked = (currentTheme === "dark");
+    document.getElementById("theme-switch").checked = (localStorage.getItem("lingkar_theme") === "light");
     document.getElementById("theme-switch").addEventListener("change", () => App.toggleTheme());
-    // Bind modal handlers
-    document.getElementById("btn-cancel-confirm").addEventListener("click", () => this.hideConfirm());
-    document.getElementById("btn-confirm-action").addEventListener("click", () => this.executePending());
-    
-    // Logout dengan konfirmasi
-    document.getElementById("btn-logout").addEventListener("click", () => this.showConfirm(
-      "Keluar dari Lingkar?",
-      "Kamu akan keluar dari akun ini. Bisa masuk lagi kapan saja.",
-      "logout"
-    ));
-    
-    // Hapus akun dengan konfirmasi
-    const btnDelete = document.getElementById("btn-delete-account");
-    if (btnDelete) {
-      btnDelete.addEventListener("click", () => this.showConfirm(
-        "Hapus akun permanen?",
-        "Semua momen, lingkaran, dan data kamu akan dihapus. Tindakan ini tidak bisa dibatalkan.",
-        "delete-account"
-      ));
-    }
+    document.getElementById("btn-logout").addEventListener("click", () => App.logout());
     document.getElementById("btn-delete-account")?.addEventListener("click", () => this.deleteAccount());
   },
   async deleteAccount() {

@@ -18,32 +18,13 @@
     <h3 class="mt-24 mb-8" style="font-size:14px;text-align:left">Tim Pengembang</h3>
     <p class="text-dim" style="text-align:left;font-size:13px">Dibangun dengan penuh perhatian oleh tim kecil yang percaya pada koneksi yang lebih privat dan bermakna.</p>
     <h3 class="mt-24 mb-8" style="font-size:14px;text-align:left">Kontak</h3>
-    <p class="text-dim" style="text-align:left;font-size:13px">arjunamahendra2003@gmail.com</p>
+    <p class="text-dim" style="text-align:left;font-size:13px">hello@lingkar.app</p>
     <h3 class="mt-24 mb-8" style="font-size:14px;text-align:left">Lisensi</h3>
     <p class="text-dim" style="text-align:left;font-size:13px">© 2026 Lingkar. Seluruh hak dilindungi.</p>
     <div class="mt-24" style="display:flex;justify-content:center;gap:20px;font-size:20px">
       <a href="#" class="text-dim"><i class="fa-brands fa-instagram"></i></a>
       <a href="#" class="text-dim"><i class="fa-brands fa-x-twitter"></i></a>
     </div>
-      <!-- Kredit Developer -->
-    <a href="developer.html" style="text-decoration:none;display:block">
-      <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(255,59,48,0.1));border:1px solid rgba(139,92,246,0.4);border-radius:16px;padding:20px;margin-top:24px">
-        <div style="text-align:center;margin-bottom:12px">
-          <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ff3b30);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;font-weight:700;color:var(--text)">0x</div>
-          <div style="font-size:16px;font-weight:800;color:var(--text)">0xmahen</div>
-          <div style="font-size:12px;color:#8b5cf6;margin-top:4px">Developer & Founder</div>
-        </div>
-        <p style="color:var(--text-dim);font-size:13px;line-height:1.6;text-align:center;margin-bottom:12px">
-          Dikembangkan dengan ❤️ oleh 0xmahen.<br>
-          Tap untuk info lengkap & dukungan.
-        </p>
-        <div style="text-align:center">
-          <span style="display:inline-flex;align-items:center;gap:6px;background:#8b5cf6;color:var(--text);padding:8px 16px;border-radius:10px;font-size:12px;font-weight:600">
-            <i class="fas fa-arrow-right"></i> Lihat Developer
-          </span>
-        </div>
-      </div>
-    </a>
   </div>
 </body>
 </html>

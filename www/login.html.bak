@@ -35,6 +35,7 @@
       <button type="submit" class="btn" id="btn-login">Masuk</button>
     </form>
     <div class="divider-text">atau</div>
+    <button class="btn btn-outline" disabled><i class="fa-brands fa-google"></i> Masuk dengan Google</button>
     <p class="text-dim mt-24" style="text-align:center;font-size:13px">
       Belum punya akun? <a href="register.html" class="text-primary">Daftar</a>
     </p>

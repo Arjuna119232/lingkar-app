@@ -73,8 +73,8 @@
     pointer-events: auto;
   }
   .modal-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
     border-radius: 16px;
     padding: 24px;
     max-width: 340px;
@@ -100,7 +100,7 @@
   }
   .modal-box h3 {
     font-size: 18px;
-    color: var(--text);
+    color: #fff;
     margin-bottom: 8px;
   }
   .modal-box p {
@@ -127,11 +127,11 @@
   .modal-btn:active { transform: scale(0.97); }
   .modal-btn-cancel {
     background: #2a2a2a;
-    color: var(--text);
+    color: #fff;
   }
   .modal-btn-delete {
     background: #ff3b30;
-    color: var(--text);
+    color: #fff;
   }
 </style>
 </head>
@@ -166,9 +166,6 @@
     </div>
 
     <!-- Tombol hapus (hanya muncul kalau momen milik user) -->
-    <button class="btn-edit-caption" id="btn-edit-caption" style="display:none;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;margin-top:16px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#8b5cf6;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.2s">
-      <i class="fa-solid fa-pen"></i> Edit Caption
-    </button>
     <button class="btn-delete-moment" id="btn-delete" style="display:none">
       <i class="fa-solid fa-trash"></i>
       Hapus Momen Ini
@@ -210,19 +207,5 @@
   <script src="js/app.js"></script>
   <script src="js/moment.js"></script>
   <script>MomentDetail.init();</script>
-
-  <!-- Modal Edit Caption -->
-  <div class="modal-overlay" id="edit-caption-modal">
-    <div class="modal-box">
-      <h3 style="font-size:18px;color:var(--text);margin-bottom:16px;text-align:center">Edit Caption</h3>
-      <textarea id="edit-caption-input" maxlength="200" placeholder="Tulis caption baru..." style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:inherit;resize:none;min-height:100px;margin-bottom:8px"></textarea>
-      <div style="font-size:12px;color:var(--text-dim);margin-bottom:16px;text-align:right"><span id="edit-caption-count">0</span>/200</div>
-      <div style="display:flex;gap:10px">
-        <button class="modal-btn" id="btn-cancel-edit" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:var(--surface-2);color:var(--text);cursor:pointer">Batal</button>
-        <button class="modal-btn" id="btn-save-edit" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:#8b5cf6;color:var(--text);cursor:pointer">Simpan</button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>

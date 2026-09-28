@@ -48,20 +48,11 @@ const Upload = {
       document.getElementById("media-input-video").click();
     });
 
-    document.getElementById("pick-camera").addEventListener("click", () => {
-      this.setActiveButton("camera");
-      document.getElementById("media-input-camera").click();
-    });
-
     document.getElementById("media-input-image").addEventListener("change", e => {
       this.preview(e.target.files[0]);
     });
 
     document.getElementById("media-input-video").addEventListener("change", e => {
-      this.preview(e.target.files[0]);
-    });
-
-    document.getElementById("media-input-camera").addEventListener("change", e => {
       this.preview(e.target.files[0]);
     });
 
@@ -80,12 +71,8 @@ const Upload = {
   setActiveButton(type) {
     document.getElementById("pick-image").classList.remove("active");
     document.getElementById("pick-video").classList.remove("active");
-    const btnCamera = document.getElementById("pick-camera");
-    if (btnCamera) btnCamera.classList.remove("active");
-
     if (type === "image") document.getElementById("pick-image").classList.add("active");
-    else if (type === "video") document.getElementById("pick-video").classList.add("active");
-    else if (type === "camera" && btnCamera) btnCamera.classList.add("active");
+    else document.getElementById("pick-video").classList.add("active");
   },
 
   async loadCircles() {

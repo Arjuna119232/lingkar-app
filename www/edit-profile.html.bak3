@@ -11,9 +11,6 @@
 </head>
 <body>
   <div class="container page no-nav no-header">
-    <a href="profile.html" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;font-size:14px;text-decoration:none;color:var(--text-dim)">
-      <i class="fa-solid fa-arrow-left"></i> Kembali
-    </a>
     <h1 style="font-size:18px;font-weight:800;margin:16px 0">Edit Profil</h1>
     <div style="text-align:center;margin-bottom:20px">
       <img id="e-avatar" class="avatar avatar-lg" style="margin:0 auto" src="assets/logo.svg">

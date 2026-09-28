@@ -69,32 +69,10 @@ const MomentDetail = {
     document.getElementById("m-time").textContent = Utils.timeAgo(m.created_at);
     document.getElementById("m-caption").textContent = m.caption || "";
 
-    // Tombol edit + hapus kalau owner
+    // Tombol hapus kalau owner
     if (this.isOwner) {
-      const btnEdit = document.getElementById("btn-edit-caption");
-      const btnDelete = document.getElementById("btn-delete");
-      if (btnEdit) {
-        btnEdit.style.display = "flex";
-        btnEdit.onclick = () => this.showEditModal();
-      }
-      if (btnDelete) {
-        btnDelete.style.display = "flex";
-        btnDelete.onclick = () => this.showDeleteModal();
-      }
-
-      // Bind modal edit
-      const btnCancelEdit = document.getElementById("btn-cancel-edit");
-      const btnSaveEdit = document.getElementById("btn-save-edit");
-      const inputEdit = document.getElementById("edit-caption-input");
-      const countEdit = document.getElementById("edit-caption-count");
-
-      if (btnCancelEdit) btnCancelEdit.onclick = () => this.hideEditModal();
-      if (btnSaveEdit) btnSaveEdit.onclick = () => this.saveEditCaption();
-      if (inputEdit && countEdit) {
-        inputEdit.oninput = () => {
-          countEdit.textContent = inputEdit.value.length;
-        };
-      }
+      document.getElementById("btn-delete").style.display = "flex";
+      document.getElementById("btn-delete").onclick = () => this.showDeleteModal();
     }
 
     // Event: modal

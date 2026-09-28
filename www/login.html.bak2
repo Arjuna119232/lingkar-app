@@ -28,14 +28,7 @@
           <i class="fa-solid fa-eye toggle-eye" id="toggle-pw"></i>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <label class="checkbox-row"><input type="checkbox" name="remember"><span>Ingat saya</span></label>
-        <a href="forgot-password.html" class="text-primary" style="font-size:13px">Lupa password?</a>
-      </div>
-      <button type="submit" class="btn" id="btn-login">Masuk</button>
-    </form>
-    <div class="divider-text">atau</div>
-    <p class="text-dim mt-24" style="text-align:center;font-size:13px">
+      <p class="text-dim mt-24" style="text-align:center;font-size:13px">
       Belum punya akun? <a href="register.html" class="text-primary">Daftar</a>
     </p>
   </div>

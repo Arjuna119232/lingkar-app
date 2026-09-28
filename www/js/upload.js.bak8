@@ -48,20 +48,11 @@ const Upload = {
       document.getElementById("media-input-video").click();
     });
 
-    document.getElementById("pick-camera").addEventListener("click", () => {
-      this.setActiveButton("camera");
-      document.getElementById("media-input-camera").click();
-    });
-
     document.getElementById("media-input-image").addEventListener("change", e => {
       this.preview(e.target.files[0]);
     });
 
     document.getElementById("media-input-video").addEventListener("change", e => {
-      this.preview(e.target.files[0]);
-    });
-
-    document.getElementById("media-input-camera").addEventListener("change", e => {
       this.preview(e.target.files[0]);
     });
 
@@ -80,12 +71,8 @@ const Upload = {
   setActiveButton(type) {
     document.getElementById("pick-image").classList.remove("active");
     document.getElementById("pick-video").classList.remove("active");
-    const btnCamera = document.getElementById("pick-camera");
-    if (btnCamera) btnCamera.classList.remove("active");
-
     if (type === "image") document.getElementById("pick-image").classList.add("active");
-    else if (type === "video") document.getElementById("pick-video").classList.add("active");
-    else if (type === "camera" && btnCamera) btnCamera.classList.add("active");
+    else document.getElementById("pick-video").classList.add("active");
   },
 
   async loadCircles() {
@@ -256,21 +243,28 @@ const Upload = {
     try {
       // Step 0: Kompres
       bar.style.width = "15%";
+      alert("STEP 1: Mulai kompres");
       const compressedFile = await this.compressFile(this.file, this.mediaType);
+      alert("STEP 2: Kompres selesai, ukuran: " + compressedFile.size);
 
       // Step 1: Simpan ke HP (atau fallback ke cloud)
       bar.style.width = "40%";
       const momentId = "m_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+      alert("STEP 3: Mulai upload media");
       let uploadResult;
       try {
+        alert("STEP 3a: Mulai panggil DB.uploadMedia");
         uploadResult = await DB.uploadMedia(compressedFile, this.user.id, momentId);
+        alert("STEP 3b: Hasil upload: " + JSON.stringify(uploadResult));
       } catch (uploadErr) {
-        console.error("Upload error:", uploadErr);
+        alert("❌ ERROR DI UPLOAD MEDIA:\n" + uploadErr.message + "\n\nStack:\n" + (uploadErr.stack || "no stack"));
         throw uploadErr;
       }
+      alert("STEP 4: Upload selesai: " + uploadResult.url.substring(0, 50));
 
       // Step 2: Insert metadata ke Supabase
       bar.style.width = "70%";
+      alert("STEP 5: Mulai create moment");
       const moment = await DB.createMoment({
         user_id: this.user.id,
         media_url: uploadResult.url,
@@ -281,6 +275,7 @@ const Upload = {
       });
 
       // Step 3: Insert visibility
+      alert("STEP 6: Mulai insert visibility");
       await sb.from("moment_visibility").insert(
         circleIds.map(id => ({ moment_id: moment.id, circle_id: id }))
       );
@@ -292,7 +287,7 @@ const Upload = {
 
     } catch (err) {
       console.error("Upload error:", err);
-      Utils.toast("Gagal posting: " + err.message, "error");
+      alert("DETAIL ERROR:\n" + err.message + "\n\nStack:\n" + (err.stack || "no stack"));
       Utils.setLoading(btn, false, "Posting");
       progressEl.classList.add("hidden");
       bar.style.width = "0%";

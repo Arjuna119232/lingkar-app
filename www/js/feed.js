@@ -1,5 +1,5 @@
 /* ===== feed.js =====
-   Handle feed momen dengan tombol download.
+   Handle feed momen + long-press hapus + counter.
    Dikembangkan oleh Arjuna Mahendra.
 */
 
@@ -11,6 +11,7 @@ const Feed = {
   userReactions: new Set(),
   likeCounts: {},
   commentCounts: {},
+  longPressTimer: null,
 
   async init() {
     App.init({ active: "feed.html", requireAuth: true });
@@ -60,11 +61,18 @@ const Feed = {
       if (reset) document.getElementById("feed-list").innerHTML = "";
 
       if (rows.length === 0 && reset) {
-        document.getElementById("feed-list").innerHTML = '<div class="empty-state"><i class="fa-regular fa-images"></i><p>Belum ada momen di sini.<br>Yuk mulai bagikan momen pertamamu!</p></div>';
+        document.getElementById("feed-list").innerHTML = `
+          <div class="empty-state">
+            <i class="fa-regular fa-images"></i>
+            <p>Belum ada momen di sini.<br>Yuk mulai bagikan momen pertamamu!</p>
+          </div>`;
       } else {
-        document.getElementById("feed-list").insertAdjacentHTML("beforeend", rows.map(r => this.card(r)).join(""));
+        document.getElementById("feed-list").insertAdjacentHTML(
+          "beforeend",
+          rows.map(r => this.card(r)).join("")
+        );
         this.bindActions();
-        this.loadLocalMedia();
+        this.bindLongPress();
       }
 
       this.offset += 20;
@@ -79,12 +87,12 @@ const Feed = {
       const momentIds = rows.map(r => r.moments.id).filter(Boolean);
       if (momentIds.length === 0) { this.userReactions = new Set(); return; }
 
-      const { data, error } = await sb.from("reactions").select("moment_id").eq("user_id", this.user.id).in("moment_id", momentIds);
-      if (error) { this.userReactions = new Set(); return; }
+      const { data } = await sb
+        .from("reactions").select("moment_id")
+        .eq("user_id", this.user.id).in("moment_id", momentIds);
+
       this.userReactions = new Set((data || []).map(r => r.moment_id));
-    } catch (e) {
-      this.userReactions = new Set();
-    }
+    } catch (e) { this.userReactions = new Set(); }
   },
 
   async loadCounts(rows) {
@@ -98,38 +106,18 @@ const Feed = {
       ]);
 
       const likes = {};
-      (reactionRes.data || []).forEach(r => { likes[r.moment_id] = (likes[r.moment_id] || 0) + 1; });
+      (reactionRes.data || []).forEach(r => {
+        likes[r.moment_id] = (likes[r.moment_id] || 0) + 1;
+      });
 
       const comments = {};
-      (commentRes.data || []).forEach(c => { comments[c.moment_id] = (comments[c.moment_id] || 0) + 1; });
+      (commentRes.data || []).forEach(c => {
+        comments[c.moment_id] = (comments[c.moment_id] || 0) + 1;
+      });
 
       this.likeCounts = likes;
       this.commentCounts = comments;
-    } catch (e) {
-      this.likeCounts = {};
-      this.commentCounts = {};
-    }
-  },
-
-  async loadLocalMedia() {
-    const placeholders = document.querySelectorAll(".moment-media[data-local-id]");
-    for (const el of placeholders) {
-      const localId = el.dataset.localId;
-      const mediaType = el.dataset.mediaType;
-      try {
-        const url = await LocalStorage.getFile(localId);
-        if (url) {
-          el.innerHTML = mediaType === "video"
-            ? '<video src="' + url + '" muted autoplay loop playsinline></video>'
-            : '<img src="' + url + '">';
-          el.dataset.resolvedUrl = url;
-        } else {
-          el.innerHTML = '<div style="padding:20px;text-align:center;color:#888;font-size:12px">⚠️ File tidak ditemukan di HP</div>';
-        }
-      } catch (e) {
-        console.warn("Gagal load media lokal:", localId, e);
-      }
-    }
+    } catch (e) { this.likeCounts = {}; this.commentCounts = {}; }
   },
 
   maybeLoadMore() {
@@ -146,44 +134,45 @@ const Feed = {
     const type = row.circles.type;
     const badgeClass = { inner: "badge-inner", close: "badge-close", community: "badge-community" }[type];
     const badgeLabel = { inner: "Inner", close: "Close", community: "Community" }[type];
-
     const isLiked = this.userReactions.has(m.id);
     const likeCount = this.likeCounts[m.id] || 0;
     const commentCount = this.commentCounts[m.id] || 0;
-    const likeLabel = likeCount > 0 ? " (" + likeCount + ")" : "";
-    const commentLabel = commentCount > 0 ? " (" + commentCount + ")" : "";
+    const likeLabel = likeCount > 0 ? ` (${likeCount})` : "";
+    const commentLabel = commentCount > 0 ? ` (${commentCount})` : "";
+    const isOwner = m.user_id === this.user.id;
 
-    let mediaHTML;
-    if (m.is_local && m.local_id) {
-      mediaHTML = '<div class="moment-media" data-local-id="' + m.local_id + '" data-media-type="' + m.media_type + '"><div class="skeleton" style="height:220px"></div></div>';
-    } else {
-      mediaHTML = '<div class="moment-media" data-resolved-url="' + m.media_url + '">' + (m.media_type === "video" ? '<video src="' + m.media_url + '" muted autoplay loop playsinline></video>' : '<img src="' + m.media_url + '">') + '</div>';
-    }
+    let mediaHTML = m.media_type === "video"
+      ? `<video src="${m.media_url}" muted autoplay loop playsinline></video>`
+      : `<img src="${m.media_url}">`;
 
-    return '<div class="card moment-card slide-up" data-id="' + m.id + '">' +
-      '<div class="card-top">' +
-        '<img class="avatar" src="' + (m.profiles.avatar_url || "assets/logo.svg") + '">' +
-        '<div class="who">' +
-          '<div class="uname">' + Utils.escapeHtml(m.profiles.username) + '</div>' +
-          '<div class="time">' + Utils.timeAgo(m.created_at) + '</div>' +
-        '</div>' +
-        '<span class="badge ' + badgeClass + '">' + badgeLabel + '</span>' +
-      '</div>' +
-      '<a href="moment-detail.html?id=' + m.id + '">' + mediaHTML + '</a>' +
-      (m.caption ? '<div class="moment-caption">' + Utils.escapeHtml(m.caption) + '</div>' : '') +
-      '<div class="moment-actions">' +
-        '<span class="act react-btn ' + (isLiked ? "liked" : "") + '" data-id="' + m.id + '">' +
-          '<i class="' + (isLiked ? "fa-solid" : "fa-regular") + ' fa-heart"></i>' +
-          '<span>Suka</span><span class="like-count">' + likeLabel + '</span>' +
-        '</span>' +
-        '<a class="act" href="moment-detail.html?id=' + m.id + '">' +
-          '<i class="fa-regular fa-comment"></i><span>Komentar</span><span class="comment-count">' + commentLabel + '</span>' +
-        '</a>' +
-        '<span class="act download-btn" data-moment-id="' + m.id + '" data-media-type="' + m.media_type + '" data-is-local="' + (m.is_local || false) + '" data-local-id="' + (m.local_id || "") + '" data-media-url="' + (m.media_url || "") + '">' +
-          '<i class="fa-solid fa-download"></i> Simpan' +
-        '</span>' +
-      '</div>' +
-    '</div>';
+    return `
+      <div class="card moment-card slide-up" data-id="${m.id}" data-owner="${isOwner}">
+        <div class="card-top">
+          <img class="avatar" src="${m.profiles.avatar_url || "assets/logo.svg"}">
+          <div class="who">
+            <div class="uname">${Utils.escapeHtml(m.profiles.username)}</div>
+            <div class="time">${Utils.timeAgo(m.created_at)}</div>
+          </div>
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <a href="moment-detail.html?id=${m.id}">
+          <div class="moment-media">${mediaHTML}</div>
+        </a>
+        ${m.caption ? `<div class="moment-caption">${Utils.escapeHtml(m.caption)}</div>` : ""}
+        <div class="moment-actions">
+          <span class="act react-btn ${isLiked ? "liked" : ""}" data-id="${m.id}">
+            <i class="${isLiked ? "fa-solid" : "fa-regular"} fa-heart"></i>
+            <span>Suka</span><span class="like-count">${likeLabel}</span>
+          </span>
+          <a class="act" href="moment-detail.html?id=${m.id}">
+            <i class="fa-regular fa-comment"></i>
+            <span>Komentar</span><span class="comment-count">${commentLabel}</span>
+          </a>
+          <span class="act download-btn" data-moment-id="${m.id}" data-media-type="${m.media_type}" data-media-url="${m.media_url || ''}">
+            <i class="fa-solid fa-download"></i> Simpan
+          </span>
+        </div>
+      </div>`;
   },
 
   bindActions() {
@@ -194,14 +183,15 @@ const Feed = {
         const wasLiked = el.classList.contains("liked");
 
         el.classList.toggle("liked");
-        el.querySelector("i").className = el.classList.contains("liked") ? "fa-solid fa-heart" : "fa-regular fa-heart";
+        el.querySelector("i").className = el.classList.contains("liked")
+          ? "fa-solid fa-heart" : "fa-regular fa-heart";
 
         const currentCount = this.likeCounts[momentId] || 0;
         const newCount = wasLiked ? Math.max(0, currentCount - 1) : currentCount + 1;
         this.likeCounts[momentId] = newCount;
 
         const countEl = el.querySelector(".like-count");
-        if (countEl) countEl.textContent = newCount > 0 ? " (" + newCount + ")" : "";
+        if (countEl) countEl.textContent = newCount > 0 ? ` (${newCount})` : "";
 
         try {
           if (!wasLiked) {
@@ -213,11 +203,10 @@ const Feed = {
           }
         } catch (e) {
           el.classList.toggle("liked");
-          el.querySelector("i").className = el.classList.contains("liked") ? "fa-solid fa-heart" : "fa-regular fa-heart";
+          el.querySelector("i").className = el.classList.contains("liked")
+            ? "fa-solid fa-heart" : "fa-regular fa-heart";
           this.likeCounts[momentId] = currentCount;
-          if (countEl) countEl.textContent = currentCount > 0 ? " (" + currentCount + ")" : "";
-          if (wasLiked) this.userReactions.add(momentId);
-          else this.userReactions.delete(momentId);
+          if (countEl) countEl.textContent = currentCount > 0 ? ` (${currentCount})` : "";
           Utils.toast("Gagal menyimpan reaksi", "error");
         }
       };
@@ -228,32 +217,101 @@ const Feed = {
         e.preventDefault();
         e.stopPropagation();
         Utils.haptic("medium");
-
         const momentId = el.dataset.momentId;
         const mediaType = el.dataset.mediaType;
-        const isLocal = el.dataset.isLocal === "true";
-        const localId = el.dataset.localId;
-        const mediaUrl = el.dataset.mediaUrl;
-
-        let url = mediaUrl;
-
-        if (isLocal && localId) {
-          const localUrl = await LocalStorage.getFile(localId);
-          if (!localUrl) {
-            Utils.toast("❌ File tidak ditemukan di HP", "error");
-            return;
-          }
-          url = localUrl;
-        } else {
-          const card = el.closest(".moment-card");
-          const mediaEl = card.querySelector("[data-resolved-url]");
-          if (mediaEl && mediaEl.dataset.resolvedUrl) url = mediaEl.dataset.resolvedUrl;
-        }
-
-        const filename = "lingkar_" + momentId + "." + (mediaType === "video" ? "mp4" : "jpg");
+        const url = el.dataset.mediaUrl;
+        const filename = `lingkar_${momentId}.${mediaType === "video" ? "mp4" : "jpg"}`;
         await Utils.downloadMedia(url, filename, mediaType);
       };
     });
+  },
+
+  // ✅ LONG PRESS untuk hapus momen
+  bindLongPress() {
+    document.querySelectorAll(".moment-card").forEach(card => {
+      const momentId = card.dataset.id;
+      const isOwner = card.dataset.owner === "true";
+
+      const startPress = (e) => {
+        // Jangan trigger kalau user tap tombol
+        if (e.target.closest(".act") || e.target.closest("button") || e.target.closest("a")) return;
+
+        this.longPressTimer = setTimeout(() => {
+          Utils.haptic("heavy");
+          if (isOwner) {
+            this.showDeleteModal(momentId);
+          } else {
+            Utils.toast("Hanya pemilik momen yang bisa hapus", "info");
+          }
+        }, 800);
+      };
+
+      const cancelPress = () => {
+        clearTimeout(this.longPressTimer);
+      };
+
+      card.addEventListener("touchstart", startPress, { passive: true });
+      card.addEventListener("touchend", cancelPress);
+      card.addEventListener("touchmove", cancelPress);
+      card.addEventListener("touchcancel", cancelPress);
+
+      // Desktop fallback
+      card.addEventListener("mousedown", startPress);
+      card.addEventListener("mouseup", cancelPress);
+      card.addEventListener("mouseleave", cancelPress);
+    });
+  },
+
+  showDeleteModal(momentId) {
+    this.pendingDeleteId = momentId;
+    const modal = document.getElementById("delete-modal");
+    if (modal) modal.classList.add("show");
+  },
+
+  hideDeleteModal() {
+    const modal = document.getElementById("delete-modal");
+    if (modal) modal.classList.remove("show");
+    this.pendingDeleteId = null;
+  },
+
+  async confirmDelete() {
+    const momentId = this.pendingDeleteId;
+    if (!momentId) return;
+
+    const btn = document.getElementById("btn-confirm-delete");
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...';
+
+    try {
+      // Ambil data momen
+      const { data: m } = await sb.from("moments").select("*").eq("id", momentId).single();
+      if (!m) throw new Error("Momen tidak ditemukan");
+
+      // Hapus file dari Storage
+      if (m.media_url) {
+        try {
+          const url = new URL(m.media_url);
+          const path = url.pathname.split("/media/")[1];
+          if (path) await sb.storage.from("media").remove([path]);
+        } catch (e) { console.warn("Gagal hapus file:", e); }
+      }
+
+      // Hapus dari database (cascade)
+      await sb.from("reactions").delete().eq("moment_id", momentId);
+      await sb.from("comments").delete().eq("moment_id", momentId);
+      await sb.from("moment_visibility").delete().eq("moment_id", momentId);
+      await sb.from("moments").delete().eq("id", momentId).eq("user_id", this.user.id);
+
+      Utils.toast("✅ Momen berhasil dihapus", "success");
+      this.hideDeleteModal();
+
+      // Reload feed
+      setTimeout(() => this.load(true), 500);
+    } catch (e) {
+      Utils.toast("❌ Gagal hapus: " + e.message, "error");
+      btn.disabled = false;
+      btn.innerHTML = "Hapus";
+    }
   },
 
   async checkNotifDot() {

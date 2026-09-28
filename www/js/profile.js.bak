@@ -1,7 +1,7 @@
 /* ===== profile.js ===== */
 const Profile = {
   async init() {
-    App.init({ header: false, nav: false, requireAuth: true });
+    App.init({ active: "profile.html", requireAuth: true });
     const user = await DB.getUser();
     if (!user) return;
     const profile = await DB.getProfile(user.id);
@@ -61,7 +61,7 @@ const Profile = {
 
 const EditProfile = {
   async init() {
-    App.init({ header: false, nav: false, requireAuth: true });
+    App.init({ nav: false, requireAuth: true });
     this.user = await DB.getUser();
     this.profile = await DB.getProfile(this.user.id);
     const f = document.getElementById("edit-form");

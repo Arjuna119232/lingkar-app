@@ -13,7 +13,7 @@
 <style>
   .media-picker {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 8px !important;
     margin-bottom: 16px !important;
     background: #1a1a1a !important;
@@ -53,16 +53,6 @@
     background: rgba(255, 59, 48, 0.15) !important;
     color: #ff3b30 !important;
   }
-  .media-picker .media-btn.btn-camera.active {
-    background: rgba(52, 199, 89, 0.15) !important;
-    color: #34c759 !important;
-  }
-  .media-picker .media-btn.btn-camera i {
-    color: #34c759;
-  }
-  .media-picker .media-btn.btn-camera span {
-    color: #34c759;
-  }
   #preview-area {
     background: #1a1a1a !important;
     border-radius: 12px !important;
@@ -89,7 +79,6 @@
 
     <input type="file" id="media-input-image" accept="image/*" class="hidden">
     <input type="file" id="media-input-video" accept="video/*" class="hidden">
-    <input type="file" id="media-input-camera" accept="image/*,video/*" capture="environment" class="hidden">
 
     <div class="media-picker">
       <button type="button" class="media-btn btn-image" id="pick-image">
@@ -97,9 +86,6 @@
       </button>
       <button type="button" class="media-btn btn-video" id="pick-video">
         <i class="fa-solid fa-video"></i><span>Video</span>
-      </button>
-      <button type="button" class="media-btn btn-camera" id="pick-camera">
-        <i class="fa-solid fa-camera-retro"></i><span>Kamera</span>
       </button>
     </div>
 
