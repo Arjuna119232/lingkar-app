@@ -37,11 +37,11 @@
       <div class="modal-icon" style="width:60px;height:60px;border-radius:50%;background:rgba(255,59,48,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#ff3b30">
         <i class="fa-solid fa-trash"></i>
       </div>
-      <h3 style="font-size:18px;color:#fff;margin-bottom:8px;text-align:center">Hapus momen ini?</h3>
-      <p style="font-size:13px;color:#888;line-height:1.5;margin-bottom:20px;text-align:center">Momen akan dihapus permanen dan tidak bisa dikembalikan.</p>
+      <h3 style="font-size:18px;color:var(--text);margin-bottom:8px;text-align:center">Hapus momen ini?</h3>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:20px;text-align:center">Momen akan dihapus permanen dan tidak bisa dikembalikan.</p>
       <div style="display:flex;gap:10px">
-        <button class="modal-btn" id="btn-cancel-delete" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:#2a2a2a;color:#fff;cursor:pointer">Batal</button>
-        <button class="modal-btn" id="btn-confirm-delete" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:#ff3b30;color:#fff;cursor:pointer">Hapus</button>
+        <button class="modal-btn" id="btn-cancel-delete" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:var(--surface-2);color:var(--text);cursor:pointer">Batal</button>
+        <button class="modal-btn" id="btn-confirm-delete" style="flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;background:#ff3b30;color:var(--text);cursor:pointer">Hapus</button>
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@
     }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
     .modal-box {
-      background: #1a1a1a; border: 1px solid #2a2a2a;
+      background: var(--surface); border: 1px solid var(--border);
       border-radius: 16px; padding: 24px;
       max-width: 340px; width: 100%;
       transform: scale(0.9); transition: transform 0.2s;

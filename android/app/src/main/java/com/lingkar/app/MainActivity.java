@@ -79,6 +79,15 @@ public class MainActivity extends Activity {
         // APK.
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
+        // Dark mode support (agar WebView ikut dark mode sistem)
+        if (Build.VERSION.SDK_INT >= 33) {
+            // Android 13+ (API 33+)
+            settings.setAlgorithmicDarkeningAllowed(true);
+        } else if (Build.VERSION.SDK_INT >= 29) {
+            // Android 10-12 (API 29-32)
+            settings.setForceDark(WebSettings.FORCE_DARK_ON);
+        }
+
         webView.setWebViewClient(new WebViewClient());
 
         webView.setWebChromeClient(new WebChromeClient() {
