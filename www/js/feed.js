@@ -30,6 +30,15 @@ const Feed = {
 
     await this.load(true);
     await this.checkNotifDot();
+
+    // ============ REALTIME ============
+    // Auto-refresh feed kalau ada post/like/komentar baru
+    DB.subscribeToChanges("moments", () => this.load(true));
+    DB.subscribeToChanges("reactions", () => this.load(true));
+    DB.subscribeToChanges("comments", () => this.load(true));
+
+    // Auto-update dot notifikasi kalau ada notif baru
+    DB.subscribeToChanges("notifications", () => this.checkNotifDot());
   },
 
   setFilter(f, btn) {

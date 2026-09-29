@@ -7,6 +7,13 @@ const Notifications = {
     document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => this.tab(b)));
     document.getElementById("btn-mark-all").addEventListener("click", () => this.markAll());
     await this.load();
+
+    // Realtime: refresh kalau ada notif baru untuk user ini
+    DB.subscribeToChanges("notifications", (payload) => {
+      if (payload.new && payload.new.user_id === this.user.id) {
+        this.load();
+      }
+    });
   },
   tab(btn) {
     document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));

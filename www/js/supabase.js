@@ -233,6 +233,25 @@ const DB = {
     return data;
   },
   // Buat notifikasi baru
+  // ============ REALTIME ============
+  // Dengarkan perubahan tabel dan panggil callback
+  subscribeToChanges(table, callback) {
+    const channel = sb
+      .channel(`realtime-${table}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: table },
+        (payload) => {
+          console.log(`[Realtime] ${table}:`, payload.eventType);
+          callback(payload);
+        }
+      )
+      .subscribe((status) => {
+        console.log(`[Realtime] ${table} status:`, status);
+      });
+    return channel;
+  },
+
   async createNotification({ userId, type, title, body, data = {} }) {
     if (!userId) return;
     const { error } = await sb.from("notifications").insert({
