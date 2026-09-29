@@ -232,6 +232,20 @@ const DB = {
     if (error) throw error;
     return data;
   },
+  // Buat notifikasi baru
+  async createNotification({ userId, type, title, body, data = {} }) {
+    if (!userId) return;
+    const { error } = await sb.from("notifications").insert({
+      user_id: userId,
+      type: type,
+      title: title,
+      body: body,
+      data: data,
+      is_read: false
+    });
+    if (error) console.warn("createNotification error:", error.message);
+  },
+
   async markAllRead(userId) {
     const { error } = await sb
       .from("notifications")

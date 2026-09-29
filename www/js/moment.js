@@ -108,7 +108,45 @@ const MomentDetail = {
   },
 
   async toggleLike() {
-    Utils.toast("Fitur like segera hadir", "info");
+    Utils.haptic("light");
+    const btn = document.getElementById("btn-like");
+    try {
+      if (this.isLiked) {
+        // Unlike: hapus dari reactions
+        await sb.from("reactions").delete()
+          .eq("moment_id", this.id)
+          .eq("user_id", this.user.id);
+        this.isLiked = false;
+        this.likeCount = Math.max(0, this.likeCount - 1);
+      } else {
+        // Like: insert ke reactions
+        await sb.from("reactions").insert({
+          moment_id: this.id,
+          user_id: this.user.id
+        });
+        this.isLiked = true;
+        this.likeCount++;
+
+        // Kirim notif ke pemilik post (kalau bukan diri sendiri)
+        if (this.moment.user_id !== this.user.id) {
+          await DB.createNotification({
+            userId: this.moment.user_id,
+            type: "like",
+            title: "Suka baru",
+            body: `${this.user.username || this.user.email} menyukai momenmu`,
+            data: { moment_id: this.id, actor_id: this.user.id }
+          });
+        }
+      }
+      // Update tampilan tombol
+      if (btn) {
+        btn.innerHTML = this.isLiked
+          ? `<i class="fa-solid fa-heart" style="color:#ff3b5c"></i> Suka (${this.likeCount})`
+          : `<i class="fa-regular fa-heart"></i> Suka (${this.likeCount})`;
+      }
+    } catch (e) {
+      Utils.toast("Gagal: " + e.message, "error");
+    }
   },
 
   async share() {
@@ -178,6 +216,18 @@ const MomentDetail = {
     const text = input.value.trim();
     if (!text) return;
     await sb.from("comments").insert({ moment_id: this.id, user_id: this.user.id, text });
+
+    // Kirim notif ke pemilik post (kalau bukan diri sendiri)
+    if (this.moment.user_id !== this.user.id) {
+      await DB.createNotification({
+        userId: this.moment.user_id,
+        type: "comment",
+        title: "Komentar baru",
+        body: `${this.user.username || this.user.email}: ${text.substring(0, 60)}`,
+        data: { moment_id: this.id, actor_id: this.user.id }
+      });
+    }
+
     input.value = "";
     await this.loadComments();
   }
