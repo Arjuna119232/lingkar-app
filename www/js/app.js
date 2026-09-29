@@ -18,7 +18,14 @@ const App = {
     const saved = mode || localStorage.getItem("lingkar_theme") || "auto";
     let effective = saved;
     if (saved === "auto") {
-      effective = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      console.log("[THEME-DEBUG] auto → prefers-color-scheme:dark =", isDark);
+      console.log("[THEME-DEBUG] matchMedia light:", window.matchMedia("(prefers-color-scheme: light)").matches);
+      console.log("[THEME-DEBUG] matchMedia no-preference:", window.matchMedia("(prefers-color-scheme: no-preference)").matches);
+      if (typeof Utils !== "undefined" && Utils.toast) {
+        Utils.toast("Auto → dark? " + isDark, "info");
+      }
+      effective = isDark ? "dark" : "light";
     }
     document.documentElement.setAttribute("data-theme", effective);
     localStorage.setItem("lingkar_theme", saved);
