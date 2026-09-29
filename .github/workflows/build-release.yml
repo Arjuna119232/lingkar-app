@@ -63,11 +63,40 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.find_apk.outputs.apk_path }}
-          name: Lingkar ${{ github.ref_name }}
+
+      - name: Rename APK
+        run: |
+          cp "${{ steps.find_apk.outputs.apk_path }}" "Lingkar-v1.1.0.apk"
+          ls -la Lingkar-v1.1.0.apk
+
+      - name: Upload ke Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.1.0
+          name: Lingkar v1.1.0
           body: |
-            Lingkar ${{ github.ref_name }}
-            
-            Download APK di bawah untuk install.
+            🎉 **Lingkar v1.1.0**
+
+            Aplikasi sosial privat untuk teman terdekat.
+
+            ### ✨ Fitur
+            - ❤️ Like momen
+            - 🔔 Notifikasi real-time (like & komentar)
+            - 📸 Upload foto & video
+            - 👥 Inner Circle, Close Circle, Community
+            - 🌙 Dark/Light mode
+
+            ### 📥 Install
+            1. Download **Lingkar-v1.1.0.apk**
+            2. Buka → Install
+            3. Warning Play Protect → Tetap install
+
+            ### 👨‍💻 Developer
+            0xmahen
+
+            ### 💖 Donasi
+            BCA 2100172502
+          files: Lingkar-v1.1.0.apk
           draft: false
           prerelease: false
+          make_latest: true
