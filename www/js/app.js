@@ -18,14 +18,13 @@ const App = {
     const saved = mode || localStorage.getItem("lingkar_theme") || "auto";
     let effective = saved;
     if (saved === "auto") {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      console.log("[THEME-DEBUG] auto → prefers-color-scheme:dark =", isDark);
-      console.log("[THEME-DEBUG] matchMedia light:", window.matchMedia("(prefers-color-scheme: light)").matches);
-      console.log("[THEME-DEBUG] matchMedia no-preference:", window.matchMedia("(prefers-color-scheme: no-preference)").matches);
-      if (typeof Utils !== "undefined" && Utils.toast) {
-        Utils.toast("Auto → dark? " + isDark, "info");
+      // Prioritas 1: dari Android (Java bridge)
+      if (typeof window.__ANDROID_DARK__ === "boolean") {
+        effective = window.__ANDROID_DARK__ ? "dark" : "light";
+      } else {
+        // Fallback: prefers-color-scheme (kalau dibuka di browser biasa)
+        effective = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       }
-      effective = isDark ? "dark" : "light";
     }
     document.documentElement.setAttribute("data-theme", effective);
     localStorage.setItem("lingkar_theme", saved);
@@ -33,6 +32,13 @@ const App = {
 
   setTheme(mode) {
     this.applyTheme(mode);
+  },
+
+  // Dipanggil dari Android saat dark mode sistem berubah
+  onAndroidDarkMode(isDark) {
+    window.__ANDROID_DARK__ = isDark;
+    const saved = localStorage.getItem("lingkar_theme") || "auto";
+    if (saved === "auto") this.applyTheme("auto");
   },
 
   toggleTheme() {

@@ -136,9 +136,36 @@ public class MainActivity extends Activity {
         });
 
         webView.loadUrl("file:///android_asset/index.html");
+        // Kirim status dark mode sistem ke WebView
+        sendDarkModeToJs();
         setContentView(webView);
 
         requestAllPermissions();
+    }
+
+    // Cek apakah sistem Android dalam mode gelap
+    private boolean isSystemDarkMode() {
+        int nightMode = getResources().getConfiguration().uiMode
+            & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    // Kirim status dark mode ke JavaScript
+    private void sendDarkModeToJs() {
+        boolean isDark = isSystemDarkMode();
+        if (webView != null) {
+            webView.post(() -> webView.evaluateJavascript(
+                "window.__ANDROID_DARK__ = " + isDark + "; " +
+                "if(window.onAndroidDarkMode) window.onAndroidDarkMode(" + isDark + ");",
+                null
+            ));
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        sendDarkModeToJs();
     }
 
     private void requestAllPermissions() {
