@@ -22,9 +22,16 @@
       <a href="privacy-policy.html" class="list-row"><i class="leading fa-solid fa-shield-halved"></i><div class="row-text"><div class="t1">Privasi</div></div><i class="chev fa-solid fa-chevron-right"></i></a>
       </div>
       <div class="list-row">
-        <i class="leading fa-solid fa-moon"></i>
-        <div class="row-text"><div class="t1">Tema Gelap</div></div>
-        <label class="switch"><input type="checkbox" id="theme-switch"><span class="slider"></span></label>
+        <i class="leading fa-solid fa-palette"></i>
+        <div class="row-text">
+          <div class="t1">Tema</div>
+          <div class="t2" style="font-size:12px" id="theme-label">Mengikuti Perangkat</div>
+        </div>
+        <select id="theme-select" style="background:transparent;color:inherit;border:none;font-size:14px;text-align:right;padding:4px 0;cursor:pointer">
+          <option value="light">☀️ Terang</option>
+          <option value="dark">🌙 Gelap</option>
+          <option value="auto">📱 Auto</option>
+        </select>
       </div>
       <a href="developer.html" class="list-row">
         <i class="leading fa-solid fa-user-tie"></i>

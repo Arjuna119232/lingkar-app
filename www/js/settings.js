@@ -2,9 +2,19 @@
 const Settings = {
   async init() {
     App.init({ nav: false, requireAuth: true });
-    const currentTheme = localStorage.getItem("lingkar_theme") || "dark";
-    document.getElementById("theme-switch").checked = (currentTheme === "dark");
-    document.getElementById("theme-switch").addEventListener("change", () => App.toggleTheme());
+    // Setup tema dropdown (terang / gelap / auto)
+    const currentTheme = localStorage.getItem("lingkar_theme") || "auto";
+    const themeSelect = document.getElementById("theme-select");
+    const themeLabel = document.getElementById("theme-label");
+    const themeLabels = { light: "Terang", dark: "Gelap", auto: "Mengikuti Perangkat" };
+    if (themeSelect) {
+      themeSelect.value = currentTheme;
+      if (themeLabel) themeLabel.textContent = themeLabels[currentTheme] || "Auto";
+      themeSelect.addEventListener("change", () => {
+        App.setTheme(themeSelect.value);
+        if (themeLabel) themeLabel.textContent = themeLabels[themeSelect.value] || "Auto";
+      });
+    }
     // Bind modal handlers
     document.getElementById("btn-cancel-confirm").addEventListener("click", () => this.hideConfirm());
     document.getElementById("btn-confirm-action").addEventListener("click", () => this.executePending());
@@ -27,6 +37,37 @@ const Settings = {
     }
     document.getElementById("btn-delete-account")?.addEventListener("click", () => this.deleteAccount());
   },
+  pendingAction: null,
+
+  showConfirm(title, message, action) {
+    this.pendingAction = action;
+    document.getElementById("confirm-title").textContent = title;
+    document.getElementById("confirm-message").textContent = message;
+    document.getElementById("confirm-modal").classList.add("show");
+  },
+
+  hideConfirm() {
+    this.pendingAction = null;
+    document.getElementById("confirm-modal").classList.remove("show");
+  },
+
+  async executePending() {
+    const action = this.pendingAction;
+    this.hideConfirm();
+    if (action === "logout") {
+      try {
+        await sb.auth.signOut();
+        localStorage.clear();
+        Utils.toast("✅ Berhasil logout", "success");
+        setTimeout(() => location.href = "login.html", 600);
+      } catch (e) {
+        Utils.toast("Gagal logout: " + e.message, "error");
+      }
+    } else if (action === "delete-account") {
+      Utils.toast("Hubungi dukungan untuk hapus akun");
+    }
+  },
+
   async deleteAccount() {
     if (!confirm("Yakin ingin menghapus akun kamu? Tindakan ini tidak bisa dibatalkan.")) return;
     Utils.toast("Hubungi tim dukungan untuk penghapusan akun (lihat contact.html)");

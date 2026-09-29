@@ -25,6 +25,8 @@ const Upload = {
   file: null,
   mediaType: null,
   user: null,
+  cropperInstance: null,
+  cropRatio: 0.8,
 
   async init() {
     App.init({ active: "upload.html", requireAuth: true });
@@ -168,7 +170,81 @@ const Upload = {
       }
     } else {
       Utils.toast("📷 Foto dipilih");
+      // Buka modal crop untuk foto
+      this.openCropModal(file);
     }
+  },
+
+  // ============ CROP ============
+  openCropModal(file) {
+    const modal = document.getElementById("crop-modal");
+    const imgEl = document.getElementById("crop-image");
+    const url = URL.createObjectURL(file);
+    imgEl.src = url;
+    modal.classList.add("show");
+
+    // Tunggu gambar load dulu
+    imgEl.onload = () => {
+      if (this.cropperInstance) this.cropperInstance.destroy();
+      this.cropperInstance = new Cropper(imgEl, {
+        aspectRatio: 0.8,
+        viewMode: 1,
+        dragMode: "move",
+        autoCropArea: 1,
+        background: false,
+        responsive: true,
+        guides: false,
+        center: false,
+        highlight: false
+      });
+    };
+
+    // Bind tombol
+    document.getElementById("crop-cancel").onclick = () => this.closeCropModal();
+    document.getElementById("crop-apply").onclick = () => this.applyCrop();
+    document.getElementById("crop-rotate").onclick = () => {
+      if (this.cropperInstance) this.cropperInstance.rotate(90);
+    };
+    document.getElementById("crop-reset").onclick = () => {
+      if (this.cropperInstance) this.cropperInstance.reset();
+    };
+    document.getElementById("crop-ratio").onclick = () => {
+      if (!this.cropperInstance) return;
+      this.cropRatio = this.cropRatio === 0.8 ? 1 : (this.cropRatio === 1 ? 1.777 : 0.8);
+      this.cropperInstance.setAspectRatio(this.cropRatio);
+      const labels = { 0.8: "4:5", 1: "1:1", 1.777: "16:9" };
+      document.getElementById("crop-ratio").innerHTML =
+        '<i class="fa-solid fa-crop"></i> ' + (labels[this.cropRatio] || "4:5");
+    };
+  },
+
+  closeCropModal() {
+    const modal = document.getElementById("crop-modal");
+    modal.classList.remove("show");
+    if (this.cropperInstance) {
+      this.cropperInstance.destroy();
+      this.cropperInstance = null;
+    }
+  },
+
+  async applyCrop() {
+    if (!this.cropperInstance) return;
+    const canvas = this.cropperInstance.getCroppedCanvas({
+      maxWidth: 1280,
+      maxHeight: 1280,
+      imageSmoothingQuality: "high"
+    });
+    canvas.toBlob((blob) => {
+      const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+      this.file = croppedFile;
+      // Update preview
+      const img = document.getElementById("preview-img");
+      img.src = URL.createObjectURL(croppedFile);
+      img.style.display = "block";
+      document.getElementById("preview-icon").style.display = "none";
+      Utils.toast("✅ Foto di-crop");
+      this.closeCropModal();
+    }, "image/jpeg", 0.9);
   },
 
   getVideoDuration(file) {

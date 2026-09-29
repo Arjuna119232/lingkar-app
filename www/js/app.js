@@ -14,16 +14,24 @@ const App = {
     if (requireAuth) Utils.requireAuth();
   },
 
-  applyTheme() {
-    const theme = localStorage.getItem("lingkar_theme") || "dark";
-    document.documentElement.setAttribute("data-theme", theme);
+  applyTheme(mode) {
+    const saved = mode || localStorage.getItem("lingkar_theme") || "auto";
+    let effective = saved;
+    if (saved === "auto") {
+      effective = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", effective);
+    localStorage.setItem("lingkar_theme", saved);
+  },
+
+  setTheme(mode) {
+    this.applyTheme(mode);
   },
 
   toggleTheme() {
-    const cur = localStorage.getItem("lingkar_theme") || "dark";
+    const cur = localStorage.getItem("lingkar_theme") || "auto";
     const next = cur === "dark" ? "light" : "dark";
-    localStorage.setItem("lingkar_theme", next);
-    document.documentElement.setAttribute("data-theme", next);
+    this.applyTheme(next);
   },
 
   renderHeader(opts = {}) {

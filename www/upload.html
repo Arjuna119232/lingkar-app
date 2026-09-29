@@ -76,6 +76,9 @@
     position: relative !important;
   }
 </style>
+  <!-- Cropper.js untuk crop foto -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 </head>
 <body>
   <div id="app-header"></div>
@@ -141,5 +144,22 @@
       else console.error('❌ Upload module tidak ditemukan');
     });
   </script>
+  <!-- Modal Crop Foto -->
+  <div id="crop-modal" class="crop-modal">
+    <div class="crop-header">
+      <button id="crop-cancel" class="crop-btn">Batal</button>
+      <div class="crop-title">Atur Foto</div>
+      <button id="crop-apply" class="crop-btn crop-btn-primary">Terapkan</button>
+    </div>
+    <div class="crop-body">
+      <img id="crop-image" src="" alt="">
+    </div>
+    <div class="crop-footer">
+      <button id="crop-rotate" class="crop-tool"><i class="fa-solid fa-rotate-right"></i> Putar</button>
+      <button id="crop-reset" class="crop-tool"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+      <button id="crop-ratio" class="crop-tool"><i class="fa-solid fa-crop"></i> 4:5</button>
+    </div>
+  </div>
+
 </body>
 </html>
