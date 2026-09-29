@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Buat Lingkaran - Lingkar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="container page no-nav no-header">
+    <a href="circle-list.html" class="text-dim"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <h1 style="font-size:18px;font-weight:800;margin:16px 0">Buat Lingkaran</h1>
+    <form id="create-form">
+      <div class="field"><label>Nama Lingkaran</label><div class="input-wrap"><input name="name" required></div></div>
+      <div class="field">
+        <label>Deskripsi</label>
+        <textarea name="desc" id="desc" maxlength="200" placeholder="Tentang lingkaran ini..."></textarea>
+        <div class="char-counter" id="desc-count">0/200</div>
+      </div>
+      <div class="field">
+        <label>Tipe Lingkaran</label>
+        <label class="checkbox-row mb-8"><input type="radio" name="type" value="inner" checked><span><b>Inner Circle</b> — lingkaran paling privat</span></label>
+        <label class="checkbox-row mb-8"><input type="radio" name="type" value="close"><span><b>Close Circle</b> — teman dekat</span></label>
+        <label class="checkbox-row mb-8"><input type="radio" name="type" value="community"><span><b>Community</b> — bisa lebih besar & publik</span></label>
+      </div>
+      <label class="checkbox-row mb-16"><input type="checkbox" name="is_public"><span>Jadikan publik (khusus Community)</span></label>
+      <p class="text-dim mb-16" style="font-size:12px">Kode invite akan digenerate otomatis setelah lingkaran dibuat.</p>
+      <button type="submit" class="btn" id="btn-create">Buat</button>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/local-storage.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/circle.js"></script>
+  <script>CircleCreate.init();</script>
+</body>
+</html>

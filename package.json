@@ -1,0 +1,14 @@
+{
+  "name": "lingkar-webview",
+  "version": "1.0.1",
+  "description": "Lingkar - Ruang kecil untuk teman terdekat",
+  "type": "module",
+  "scripts": {
+    "dev": "nitron dev",
+    "build": "nitron build",
+    "build:release": "nitron build --release"
+  },
+  "dependencies": {
+    "nitron": "^1.3.1"
+  }
+}

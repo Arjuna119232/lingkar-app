@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pengaturan Notifikasi - Lingkar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="container page no-nav no-header">
+    <a href="settings.html" class="text-dim"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <h1 style="font-size:18px;font-weight:800;margin:16px 0">Pengaturan Notifikasi</h1>
+    <form id="notif-settings-form">
+      <div class="card" style="padding:0 14px">
+        <div class="list-row"><div class="row-text"><div class="t1">Momen baru di Inner Circle</div></div><label class="switch"><input type="checkbox" id="notif_inner"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Momen baru di Close Circle</div></div><label class="switch"><input type="checkbox" id="notif_close"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Momen baru di Community</div></div><label class="switch"><input type="checkbox" id="notif_community"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Komentar di momen saya</div></div><label class="switch"><input type="checkbox" id="notif_comment"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Reaksi di momen saya</div></div><label class="switch"><input type="checkbox" id="notif_reaction"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Request join lingkaran</div></div><label class="switch"><input type="checkbox" id="notif_join"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Follow baru</div></div><label class="switch"><input type="checkbox" id="notif_follow"><span class="slider"></span></label></div>
+        <div class="list-row"><div class="row-text"><div class="t1">Pesan</div></div><label class="switch"><input type="checkbox" id="notif_message"><span class="slider"></span></label></div>
+      </div>
+      <div class="field mt-16">
+        <label>Jam Tenang (Do Not Disturb)</label>
+        <div style="display:flex;gap:10px">
+          <div class="input-wrap"><input type="time" value="22:00"></div>
+          <div class="input-wrap"><input type="time" value="07:00"></div>
+        </div>
+      </div>
+      <button type="submit" class="btn mt-16">Simpan</button>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/local-storage.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/settings.js"></script>
+  <script>NotifSettings.init();</script>
+</body>
+</html>

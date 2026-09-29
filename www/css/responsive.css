@@ -1,0 +1,12 @@
+/* ===== responsive.css ===== */
+@media (min-width:521px){
+  .app-header, .bottom-nav{border-left:1px solid var(--border); border-right:1px solid var(--border);}
+}
+@media (max-width:340px){
+  .page{padding-left:12px; padding-right:12px;}
+  .app-header .logo{font-size:18px;}
+}
+@media (max-height:600px){
+  .center-screen{padding:12px;}
+}
+input, select, textarea, button{font-size:16px;} /* cegah zoom auto di sebagian WebView Android saat fokus input */

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detail Lingkaran - Lingkar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="container page no-nav no-header">
+    <a href="circle-list.html" class="text-dim"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <div style="text-align:center;margin:16px 0">
+      <img id="c-avatar" class="avatar avatar-lg" style="margin:0 auto" src="assets/logo.svg">
+      <h1 id="c-name" style="font-size:18px;font-weight:800;margin-top:10px"></h1>
+      <span id="c-badge" class="badge mt-8"></span>
+      <p class="text-dim mt-8" id="c-desc" style="font-size:13px"></p>
+      <p class="text-dim" id="c-stats" style="font-size:12px;margin-top:4px"></p>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:20px">
+      <a href="circle-members.html" id="link-members" class="btn btn-outline btn-sm" style="flex:1">Lihat Member</a>
+      <a href="#" id="btn-owner-settings" class="btn btn-outline btn-sm hidden" style="flex:1">Pengaturan</a>
+    </div>
+    <div id="circle-feed" class="empty-state"><i class="fa-regular fa-images"></i><p>Momen khusus lingkaran ini akan muncul di sini.</p></div>
+    <button class="btn btn-outline mt-16 hidden" id="btn-leave">Keluar Lingkaran</button>
+    <button class="btn btn-danger mt-16 hidden" id="btn-delete">Hapus Lingkaran</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/local-storage.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/circle.js"></script>
+  <script>
+    CircleDetail.init().then(() => {
+      document.getElementById("link-members").href = "circle-members.html?id=" + Utils.qs("id");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+/* ===== Lingkar - style.css (variabel & base) ===== */
+:root{
+  --primary:#6C5CE7;
+  --primary-dark:#5849c2;
+  --inner:#FF6B81;
+  --close:#54A0FF;
+  --community:#1DD1A1;
+  --bg:#0F0F14;
+  --surface:#1A1A22;
+  --surface-2:#23232E;
+  --text:#F5F5F7;
+  --text-dim:#9A9AA5;
+  --border:#2E2E3A;
+  --danger:#FF4757;
+  --success:#2ED573;
+  --radius:16px;
+  --radius-sm:10px;
+  --nav-h:64px;
+  --header-h:0px;
+  /* --android-safe-top/bottom diisi dari MainActivity lewat WindowInsetsCompat
+     (nilai piksel asli status bar/nav bar Android). env(safe-area-inset-*)
+     tetap dipakai sebagai fallback untuk browser biasa / iOS. */
+  --android-safe-top:0px;
+  --android-safe-bottom:0px;
+  --safe-top:max(env(safe-area-inset-top, 0px), var(--android-safe-top));
+  --safe-bottom:max(env(safe-area-inset-bottom, 0px), var(--android-safe-bottom));
+}
+[data-theme="light"]{
+  --bg:#F7F7FA;
+  --surface:#FFFFFF;
+  --surface-2:#F0F0F5;
+  --text:#16161C;
+  --text-dim:#6B6B76;
+  --border:#E4E4EC;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{height:100%; overflow-x:hidden;}
+body{
+  height:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:none;
+  padding-top:var(--safe-top);
+  padding-bottom:var(--safe-bottom);
+}
+a{color:inherit; text-decoration:none;}
+img,video{max-width:100%; display:block;}
+button, input, textarea, select{font-family:inherit; max-width:100%;}
+/* Kunci lebar aplikasi ke ukuran "mobile" yang wajar di layar apa pun —
+   HP kecil, HP besar, tablet, bahkan browser desktop — sehingga tampilan
+   tidak pernah melebar/kebesaran mengikuti layar, melainkan tetap
+   proporsional seperti aplikasi mobile pada umumnya. */
+.container{
+  max-width:520px;
+  width:100%;
+  margin:0 auto;
+  min-height:100%;
+  position:relative;
+  background:var(--bg);
+  box-shadow:0 0 40px rgba(0,0,0,0.25);
+}
+@media (min-width:521px){
+  body{ background:var(--surface-2); }
+}
+.page{padding:calc(var(--header-h) + 16px) 16px calc(var(--nav-h) + 24px);}
+.page.no-nav{padding-bottom:24px;}
+.page.no-header{padding-top:20px;}
+.hidden{display:none !important;}
+.center-screen{
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:24px; text-align:center;
+}
+.text-dim{color:var(--text-dim);}
+.text-primary{color:var(--primary);}
+.mt-8{margin-top:8px;} .mt-16{margin-top:16px;} .mt-24{margin-top:24px;}
+.mb-8{margin-bottom:8px;} .mb-16{margin-bottom:16px;} .mb-24{margin-bottom:24px;}
+::-webkit-scrollbar{width:0; height:0;}
+
+/* ============================================
+   FEED CARD FIX — batasi tinggi gambar
+   ============================================ */
+.moment-media {
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.moment-media img,
+.moment-media video {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card momen lebih compact */
+.moment-card {
+  overflow: hidden;
+}
+
+.moment-card .moment-caption {
+  padding: 12px 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.moment-card .moment-actions {
+  padding: 12px 16px 14px;
+}
+
+/* Responsive — di layar kecil */
+@media (max-width: 480px) {
+  .moment-media {
+    max-height: 320px;
+  }
+  .moment-media img,
+  .moment-media video {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 360px) {
+  .moment-media {
+    max-height: 260px;
+  }
+  .moment-media img,
+  .moment-media video {
+    max-height: 260px;
+  }
+}

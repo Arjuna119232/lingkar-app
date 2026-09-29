@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabung Lingkaran - Lingkar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="container page no-nav no-header">
+    <a href="circle-list.html" class="text-dim"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <div class="center-screen" style="min-height:auto;padding:30px 0">
+      <i class="fa-solid fa-key" style="font-size:34px;color:var(--primary)"></i>
+      <h1 style="font-size:18px;font-weight:800;margin-top:12px">Masukkan Kode Undangan</h1>
+      <p class="text-dim mt-8" style="font-size:13px">Minta kode 6 karakter ke teman kamu</p>
+    </div>
+    <form id="join-form">
+      <div class="field">
+        <div class="input-wrap"><input name="code" maxlength="6" required style="text-align:center;letter-spacing:6px;font-weight:700;text-transform:uppercase" placeholder="XXXXXX"></div>
+      </div>
+      <button type="submit" class="btn" id="btn-join">Gabung</button>
+    </form>
+    <p class="text-dim mt-24" style="text-align:center;font-size:13px">
+      Ingin cari komunitas publik? <a href="search.html" class="text-primary">Cari di sini</a>
+    </p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/local-storage.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/circle.js"></script>
+  <script>CircleJoin.init();</script>
+</body>
+</html>
